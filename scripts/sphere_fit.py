@@ -45,7 +45,9 @@ if __name__ == '__main__':
 	
 	x = 0
 	
-	
+	fil_in = 0.0 # before the first reading
+	fil_out = 5.5 # an initial guess before the first reading
+	fil_gain = 0.05 # how much of the most recent input is included 
 	while not rospy.is_shutdown():
 		#get rid of empty lists
 		if len(xyz.points) == 0:
@@ -54,6 +56,18 @@ if __name__ == '__main__':
 		
 		#publish node
 		sphere_params1 = sphere_params(xyz)
+		
+		fil_in = sphere_params1.xc
+		fil_out = fil_gain*fil_in + (1 - fil_gain)*fil_out
+		sphere_params1.xc = fil_out
+		
+		fil_in = sphere_params1.yc
+		fil_out = fil_gain*fil_in + (1 - fil_gain)*fil_out
+		sphere_params1.yc = fil_out
+		
+		fil_in = sphere_params1.zc
+		fil_out = fil_gain*fil_in + (1 - fil_gain)*fil_out
+		sphere_params1.zc = fil_out
 		
 		print(sphere_params1.xc, sphere_params1.yc, sphere_params1.zc, sphere_params1.radius)
 		sphere_pub.publish(sphere_params1)
