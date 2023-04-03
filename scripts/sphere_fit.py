@@ -57,19 +57,24 @@ if __name__ == '__main__':
 		#publish node
 		sphere_params1 = sphere_params(xyz)
 		
+		# math to calculate the noise out (XC)
 		fil_in = sphere_params1.xc
 		fil_out = fil_gain*fil_in + (1 - fil_gain)*fil_out
 		sphere_params1.xc = fil_out
 		
+		# math to calculate the noise out (YC)
 		fil_in = sphere_params1.yc
 		fil_out = fil_gain*fil_in + (1 - fil_gain)*fil_out
 		sphere_params1.yc = fil_out
 		
+		# math to calculate the noise out (ZC)
 		fil_in = sphere_params1.zc
 		fil_out = fil_gain*fil_in + (1 - fil_gain)*fil_out
 		sphere_params1.zc = fil_out
 		
+		# print for test
 		print(sphere_params1.xc, sphere_params1.yc, sphere_params1.zc, sphere_params1.radius)
+		# publish
 		sphere_pub.publish(sphere_params1)
 		# pause until the next iteration			
 		rate.sleep()
