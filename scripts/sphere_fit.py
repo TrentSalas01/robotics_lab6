@@ -45,32 +45,45 @@ if __name__ == '__main__':
 	
 	x = 0
 	
-	fil_in = 0.0 # before the first reading
-	fil_out = 5.5 # an initial guess before the first reading
-	fil_gain = 0.05 # how much of the most recent input is included 
+	xcfil_out = -0.013 # an initial guess before the first reading
+	xcfil_gain = 0.05/2 # how much of the most recent input is included 
+	
+	ycfil_out = -0.02 # an initial guess before the first reading
+	ycfil_gain = 0.05/2 # how much of the most recent input is included 
+
+	zcfil_out = 0.45 # an initial guess before the first reading
+	zcfil_gain = 0.05/2 # how much of the most recent input is included 
+	
+	radiusfil_out = 0.035 # an initial guess before the first reading
+	radiusfil_gain = 0.05/2 # how much of the most recent input is included 
+	
 	while not rospy.is_shutdown():
 		#get rid of empty lists
 		if len(xyz.points) == 0:
 			continue
-		
-		
+			
 		#publish node
 		sphere_params1 = sphere_params(xyz)
 		
 		# math to calculate the noise out (XC)
-		fil_in = sphere_params1.xc
-		fil_out = fil_gain*fil_in + (1 - fil_gain)*fil_out
-		sphere_params1.xc = fil_out
+		xcfil_in = sphere_params1.xc
+		xcfil_out = xcfil_gain*xcfil_in + (1 - xcfil_gain)*xcfil_out
+		sphere_params1.xc = xcfil_out
 		
 		# math to calculate the noise out (YC)
-		fil_in = sphere_params1.yc
-		fil_out = fil_gain*fil_in + (1 - fil_gain)*fil_out
-		sphere_params1.yc = fil_out
+		ycfil_in = sphere_params1.yc
+		ycfil_out = ycfil_gain*ycfil_in + (1 - ycfil_gain)*ycfil_out
+		sphere_params1.yc = ycfil_out
 		
 		# math to calculate the noise out (ZC)
-		fil_in = sphere_params1.zc
-		fil_out = fil_gain*fil_in + (1 - fil_gain)*fil_out
-		sphere_params1.zc = fil_out
+		zcfil_in = sphere_params1.zc
+		zcfil_out = zcfil_gain*zcfil_in + (1 - zcfil_gain)*zcfil_out
+		sphere_params1.zc = zcfil_out
+		
+		# math to calculate the noise out (RADIUS)
+		radiusfil_in = sphere_params1.zc
+		radiusfil_out = radiusfil_gain*radiusfil_in + (1 - radiusfil_gain)*radiusfil_out
+		sphere_params1.zc = radiusfil_out
 		
 		# print for test
 		print(sphere_params1.xc, sphere_params1.yc, sphere_params1.zc, sphere_params1.radius)
